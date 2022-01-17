@@ -18,34 +18,102 @@ client.on('ready', () => {
 });
 
 client.on('messageCreate', (msg) => {
-  if (msg.content == 'ping') {
-	  msg.reply('pong!');
-  }
-  else if (msg.content == 'join') {
-    const { joinVoiceChannel } = require("@discordjs/voice");
-		channel = msg.member.voice.channel;
+  let tokens = msg.content.split(" ");
+	let command = tokens.shift();
+	
+	if (command.charAt(0) == "!"){
+		if (command.substring(1) == 'ping') {
+			msg.reply('pong!');
+		}
+		else if (command.substring(1) == 'join') {
+			const { joinVoiceChannel } = require("@discordjs/voice");
+			channel = msg.member.voice.channel;
 
-    connection = joinVoiceChannel({
-      channelId: channel.id,
-      guildId: channel.guild.id,
-      adapterCreator: channel.guild.voiceAdapterCreator,
-    });
-  }
-	else if (msg.content == 'leave') {
-		connection.disconnect();
-	}
-	else if (msg.content == '.ct') {
-		channel = msg.channel;
-		let channelName = 'food-talk' + cont;
-		cont += 1;
-		const thread = channel.threads.create({
-			name: channelName,
-			autoArchiveDuration: 60,
-			reason: 'Needed a separate thread for food',
-    });
+			connection = joinVoiceChannel({
+				channelId: channel.id,
+				guildId: channel.guild.id,
+				adapterCreator: channel.guild.voiceAdapterCreator,
+			});
+		}
+		else if (command.substring(1) == 'leave') {
+			connection.disconnect();
+		}
+		else if (command.substring(1) == 'ct') {
+			channel = msg.channel;
+			let channelName = 'food-talk' + cont;
+			cont += 1;
+			const thread = channel.threads.create({
+				name: channelName,
+				autoArchiveDuration: 60,
+				reason: 'Needed a separate thread for food',
+			});
+		}
+		else if (command.substring(1) == 'dor') {
+			const file = require('fs');
+			let json = require("./dor.json");
+
+			file.readFile('./dor.json', (err, data) => {
+					if (err){
+							console.log(err);
+					} else {
+						let obj = JSON.parse(data);
+						channel = msg.channel;
+
+						for (let i = 0; i < obj[0].exercises.length; i++) {
+							channel.send(obj[0].exercises[i]);
+						}
+
+						let aux = [];
+
+						for (let i = 1; i < obj.length; i++)
+							aux.push(obj[i]);
+						
+						let json = JSON.stringify(aux);
+						file.writeFile('./dor.json', json, (err) => {
+								console.log(err);
+						});
+			   }
+			});
+		}
+		else if (command.substring(1) == 'add') {
+
+      let date = new Date();
+      let d = String(date.getTime()); 
+    
+      console.log(d);
+            
+      d = new Intl.DateTimeFormat('pt-BR', {timeZone: 'America/Sao_Paulo'}).format(d);
+
+      d = String(d);
+
+      console.log(d);
+      let today = d.substring(6,10);
+      today = today + d.substring(3,5);
+      today = today + d.substring(0,2);
+      console.log(today);
+      
+      let json = require("./dor.json");
+  
+      if(json[json.length-1].date === today){
+        json[json.length-1].exercises.push(tokens[0]);
+      }
+      else{
+        json.push({"date": today, "exercises": tokens[0]});
+      }
+
+      console.log(json);
+      
+			json = JSON.stringify(json);
+      
+			const file = require('fs')
+			file.writeFile('./dor.json', json, (err) =>{
+				console.log(err);
+			});
+	
+      console.log(json);
+		} 
 	}
 });
-
 
 // client.on('')
 

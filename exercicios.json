@@ -1,4 +1,5 @@
 [
-	{"20220111": ["https://codeforces.com/problemset/problem/1542/C"]},
-	{"20220112": ["https://codeforces.com/contest/1625/problem/C", "https://codeforces.com/contest/1621/problem/B"]} 
+	{"date": "22020111", "exercises": ["https://codeforces.com/problemset/problem/1542/C"]},
+	{"date": "22020112", "exercises": ["https://codeforces.com/contest/1621/problem/B", "https://codeforces.com/contest/1625/problem/C"]},
+	{"date": "22000117", "exercises": ["https://codeforces.com/contest/1626/problem/C", "https://codeforces.com/problemset/problem/1627/C"]}
 ]
